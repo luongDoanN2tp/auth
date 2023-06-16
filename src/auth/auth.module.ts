@@ -14,7 +14,7 @@ generateKeyPair(
     UserModule,
     JwtModule.register({
       global: true,
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: '1m' },
     }),
   ],
   controllers: [AuthController],

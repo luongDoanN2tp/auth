@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserService } from '../models/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { IUserBasic } from '../models/user/interfaces';
@@ -28,14 +28,12 @@ export class AuthService {
     const payload: PayloadDto = { id: id, username: username };
     return {
       access_token: await this.jwtService.signAsync(payload, {
-        privateKey: fs.readFileSync(privateKeyPath, 'ascii'),
+        privateKey: fs.readFileSync(privateKeyPath, 'utf8'),
+        algorithm: 'RS256',
       }),
     };
   }
-
   async getPublicKey() {
-    return {
-      publicKey: fs.readFileSync(publicKeyPath, 'ascii'),
-    };
+    return fs.readFileSync(publicKeyPath, 'utf8');
   }
 }
