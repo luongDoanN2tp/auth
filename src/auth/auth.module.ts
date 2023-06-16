@@ -3,19 +3,18 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserModule } from '../models/user/user.module';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
+import { generateKeyPair } from './util/generateKeyPair';
 
-const keyPair = jwtConstants.createSecret();
-console.log(keyPair);
+generateKeyPair(
+  'src/auth/store/public_key.pem',
+  'src/auth/store/private_key.pem',
+);
 @Module({
   imports: [
     UserModule,
     JwtModule.register({
       global: true,
-      // secret: jwtConstants.secret,
-      privateKey: keyPair.privateKey,
-      publicKey: keyPair.publicKey,
-      signOptions: { expiresIn: '1h', algorithm: 'RS256' },
+      signOptions: { expiresIn: '1h' },
     }),
   ],
   controllers: [AuthController],

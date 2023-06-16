@@ -3,6 +3,10 @@ import { UserService } from '../models/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { IUserBasic } from '../models/user/interfaces';
 import { PayloadDto } from './dto/payload.dto';
+import fs = require('fs');
+
+const publicKeyPath : string = 'src/auth/store/public_key.pem';
+const privateKeyPath : string = 'src/auth/store/private_key.pem';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +27,15 @@ export class AuthService {
     }
     const payload: PayloadDto = { id: id, username: username };
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync(payload, {
+        privateKey: fs.readFileSync(privateKeyPath, 'ascii'),
+      }),
+    };
+  }
+
+  async getPublicKey() {
+    return {
+      publicKey: fs.readFileSync(publicKeyPath, 'ascii'),
     };
   }
 }
